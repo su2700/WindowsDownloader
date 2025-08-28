@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def generate_commands(url, filename):
     print("\n📥 Generated Download Commands:\n")
 
