@@ -30,7 +30,15 @@ def generate_commands(url, filename, server_type):
         print(f'Remove-PSDrive Z')
 
 if __name__ == "__main__":
-    server_type = input("Select server type (http/smb): ").strip().lower()
+    server_type_input = input("Select server type (1 for http, 2 for smb): ").strip()
+    if server_type_input == "1":
+        server_type = "http"
+    elif server_type_input == "2":
+        server_type = "smb"
+    else:
+        print("Invalid selection. Defaulting to http.")
+        server_type = "http"
+
     url = input("Enter the download URL or IP: ").strip()
     port = input("Enter the port number (leave blank for default): ").strip()
 
