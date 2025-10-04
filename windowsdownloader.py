@@ -17,5 +17,8 @@ def generate_commands(url, filename):
 
 if __name__ == "__main__":
     url = input("Enter the download URL or IP: ").strip()
+    # Add http:// if missing
+    if not url.startswith("http://") and not url.startswith("https://"):
+        url = "http://" + url
     filename = input("Enter the save file name (with extension): ").strip()
     generate_commands(url, filename)
