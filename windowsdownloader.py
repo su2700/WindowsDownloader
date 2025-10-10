@@ -6,25 +6,26 @@ def generate_commands(url, filename, server_type):
     if server_type == "http":
         # CMD commands
         print("🔹 CMD:")
-        print(f'curl -O {url}')
-        print(f'certutil -urlcache -split -f {url} {filename}')
-        print(f'bitsadmin /transfer myDownloadJob {url} {filename}')
+        print(f'wget {url}/{filename} -O {filename}')
+        print(f'curl -O {url}/{filename}')
+        print(f'certutil -urlcache -split -f {url}/{filename} {filename}')
+        print(f'bitsadmin /transfer myDownloadJob {url}/{filename} {filename}')
 
         # PowerShell commands
         print("\n🔹 PowerShell:")
-        print(f'Invoke-WebRequest -Uri "{url}" -OutFile "{filename}"')
-        print(f'Start-BitsTransfer -Source "{url}" -Destination "{filename}"')
-        print(f'$client = New-Object System.Net.WebClient; $client.DownloadFile("{url}", "{filename}")')
-        print(f'iwr -uri "{url}" -Outfile "{filename}"')
+        print(f'Invoke-WebRequest -Uri "{url}/{filename}" -OutFile "{filename}"')
+        print(f'Start-BitsTransfer -Source "{url}/{filename}" -Destination "{filename}"')
+        print(f'$client = New-Object System.Net.WebClient; $client.DownloadFile("{url}/{filename}", "{filename}")')
+        print(f'iwr -uri "{url}/{filename}" -Outfile "{filename}"')
     elif server_type == "smb":
         # CMD commands for SMB
         print("🔹 CMD:")
-        print(f'copy {url} {filename}')
+        print(f'copy {url}\\{filename} {filename}')
         print(f'net use Z: {url.split("\\\\")[0] if url.startswith("\\\\") else url} && copy Z:\\{filename} . && net use Z: /delete')
 
         # PowerShell commands for SMB
         print("\n🔹 PowerShell:")
-        print(f'Copy-Item "{url}" -Destination "{filename}"')
+        print(f'Copy-Item "{url}\\{filename}" -Destination "{filename}"')
         print(f'New-PSDrive -Name Z -PSProvider FileSystem -Root "{url}"')
         print(f'Copy-Item "Z:\\{filename}" -Destination "."')
         print(f'Remove-PSDrive Z')
