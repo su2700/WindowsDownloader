@@ -17,18 +17,24 @@ def generate_commands(url, filename, server_type):
         print(f'Start-BitsTransfer -Source "{url}/{filename}" -Destination "{filename}"')
         print(f'$client = New-Object System.Net.WebClient; $client.DownloadFile("{url}/{filename}", "{filename}")')
         print(f'iwr -uri "{url}/{filename}" -Outfile "{filename}"')
+
     elif server_type == "smb":
         # CMD commands for SMB
         print("🔹 CMD:")
+
+        # Precompute share name to avoid f-string backslash issues
+        share = url.split("\\\\")[0] if url.startswith("\\\\") else url
+
         print(f'copy {url}\\{filename} {filename}')
-        print(f'net use Z: {url.split("\\\\")[0] if url.startswith("\\\\") else url} && copy Z:\\{filename} . && net use Z: /delete')
+        print(f'net use Z: {share} && copy Z:\\{filename} . && net use Z: /delete')
 
         # PowerShell commands for SMB
         print("\n🔹 PowerShell:")
         print(f'Copy-Item "{url}\\{filename}" -Destination "{filename}"')
         print(f'New-PSDrive -Name Z -PSProvider FileSystem -Root "{url}"')
         print(f'Copy-Item "Z:\\{filename}" -Destination "."')
-        print(f'Remove-PSDrive Z')
+        print('Remove-PSDrive Z')
+
 
 if __name__ == "__main__":
     server_type_input = input("Select server type (1 for http, 2 for smb): ").strip()
